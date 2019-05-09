@@ -174,10 +174,8 @@ public class ProductController {
 		System.out.println("/updateProduct");
 		//Business Logic
 		productService.updateProduct(product);
-	
-		session.setAttribute("product", product);
 		
-		return "redirect:/updateProductView?prodNo="+prodNo;
+		return "redirect:/product/updateProductView?prodNo="+prodNo;
 	}
 	
 	@RequestMapping("/listProduct")

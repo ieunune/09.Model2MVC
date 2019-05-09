@@ -17,11 +17,7 @@
 		$("form").attr("method" , "POST").attr("action" , "/product/listProduct?&menu="+$("#menu").val()).submit();
 	}
 	
-	$(function(){
-		$("td.ct_btn01:contains('구매')").on("click", function(){
-			$(window.parent.frames["rightFrame"].document.location).attr("href","/purchase/addPurchaseView?prod_no=${product.prodNo}");
-		});
-		
+	$(function(){		
 		$(".ct_list_pop:contains('배송하기')").on("click", function(){
 			$(window.parent.frames["rightFrame"].document.location).attr("href","/purchase/updateTranCode?prodNo="+$("#prodNo").text().trim()+"&menu="+$("#menu").val());
 			alert('배송이 완료되었습니다.')
@@ -150,7 +146,7 @@
 				<c:forEach var="product" items="${list}">
 					<c:set var="i" value="${i+1}"/>
 				<tr class="ct_list_pop">
-					<td align="center" id="prod_no">${product.prodNo}</td>
+					<td align="center" id="prod_no">${ i }</td>
 					<td></td>
 					<td align="left" id="prodName">
 						<input type="hidden" id="prodNo" value="${product.prodNo}">

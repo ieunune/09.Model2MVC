@@ -9,11 +9,29 @@
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
 	function fncGetUserList(currentPage) {
-		document.getElementById("currentPage").value = currentPage;
-		document.detailForm.submit();
+		$("#currentPage").val(currentPage)
+		$("form").attr("method" , "POST").attr("action" , "/purchase/listPurchase?&menu="+$("#menu").val()).submit();
 	}
+	
+	$(function(){
+		$(".ct_list_pop td:nth-child(1)").on("click",function(){
+			self.location="/purchase/getPurchase?tranNo="+$(this).children("input").val();
+		});
+		
+		$(".ct_list_pop td:nth-child(3)").on("click",function(){
+			self.location="/user/getUser?userId="+$(this).children("input").val();
+		});
+		
+		$(".ct_list_pop td:nth-child(1)").css("color","red");
+		$("h7").css("color","red");
+		
+		$(".ct_list_pop td:nth-child(3)").css("color","blue");
+		
+		$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
+	});
 </script>
 </head>
 
@@ -48,9 +66,15 @@
 						${resultPage.currentPage} 페이지</td>
 				</tr>
 				<tr>
-					<td class="ct_list_b" width="100">거래번호</td>
+					<td class="ct_list_b" width="100">
+					거래번호<br>
+					<h7> (click : 주문정보) </h7>
+					</td>
 					<td class="ct_line02"></td>
-					<td class="ct_list_b" width="100">회원ID</td>
+					<td class="ct_list_b" width="100">
+					회원ID<br>
+					<h7> (click : 회원정보) </h7> 
+					</td>
 					<td class="ct_line02"></td>
 					<td class="ct_list_b" width="100">회원명</td>
 					<td class="ct_line02"></td>
@@ -67,10 +91,14 @@
 				<c:forEach var="purchase" items="${list}">
 					<c:set var="i" value="${ i+1 }" />
 				<tr class="ct_list_pop">
-					<td align="center"><a href="/purchase/getPurchase?tranNo=${purchase.tranNo}">${ i }</a>
+					<td align="center">
+					<input type="hidden" id="tranNo" value="${purchase.tranNo}">
+					${ i }
 					</td>
 					<td></td>
-					<td align="left"><a href="/purchase/getUser?userId=${user.userId}">${user.userId}</a>
+					<td align="left">
+					<input type="hidden" id="userId" value="${user.userId}">
+					${user.userId}
 					</td>
 					<td></td>
 					<td align="left">${purchase.receiverName}</td>

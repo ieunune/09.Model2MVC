@@ -7,6 +7,17 @@
 
 <link rel="stylesheet" href="/css/admin.css" type="text/css">
 
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript">
+$(function () {
+	$("td.ct_btn01:contains('구매')").on("click", function(){
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/purchase/addPurchaseView?prod_no="+$("#prodNo").text().trim());
+	});
+	$("td.ct_btn01:contains('이전')").on("click", function(){
+		history.go(-1);
+	});
+});
+</script>
 </head>
 
 <body bgcolor="#ffffff" text="#000000">
