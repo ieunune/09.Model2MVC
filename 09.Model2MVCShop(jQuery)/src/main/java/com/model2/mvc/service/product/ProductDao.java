@@ -20,7 +20,7 @@ public interface ProductDao {
 
 	public void updateProduct(Product product) throws Exception;
 	
-	public Map<String, Object> getProductList(Search search) throws SQLException;
+	public Map<String, Object> getProductList(Map<String, Object> searchMap) throws SQLException;
 
 	public int getTotalCount(Search search) throws SQLException;
 	/*

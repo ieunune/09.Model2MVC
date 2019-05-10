@@ -106,7 +106,7 @@ $(function () {
 			<table border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td height="26">
-						<img src="http://placehold.it/300X300"/>
+						<img src="/images/uploadFiles/${product.fileName}" width="auto" height="300px"/>
 					</td>
 				</tr>
 			</table>

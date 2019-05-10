@@ -1,9 +1,12 @@
 package com.model2.mvc.web.product;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,9 +20,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
@@ -39,6 +44,9 @@ public class ProductController {
 		System.out.println("ProductController Defualt Constructor");
 	}
 	
+	@Resource(name="uploadPath")
+	String uploadPath;
+	
 	@Value("#{commonProperties['pageUnit'] ?: 3}")
 	int pageUnit;
 	
@@ -54,15 +62,27 @@ public class ProductController {
 		return "redirect:/product/addProductView.jsp";
 	}
 	
-	@SuppressWarnings("deprecation")
 	@RequestMapping("/addProduct")
-	public String addProduct( @ModelAttribute("product") Product product, HttpServletRequest request) throws Exception {
+	public String addProduct( @ModelAttribute("product") Product product, HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file, @RequestParam("prodNo") int prodNo) throws Exception {
 
 		System.out.println("/addProduct");
 		//Business Logic
 		String date = product.getManuDate();
 		String temp = "";
 		String[] dateArray = date.split("-");
+		
+		System.out.println("file :: " + file.getOriginalFilename());
+		product.setFileName(file.getOriginalFilename());
+		
+		File target = new File(uploadPath, file.getOriginalFilename());
+		FileCopyUtils.copy(file.getBytes(), target);
+		
+		String history=null;
+		Cookie cookie = new Cookie("history", String.valueOf(prodNo));
+		cookie.setMaxAge(60*60*24);
+		System.out.println("cookie : " + cookie);
+		history += cookie+",";
+		response.addCookie(cookie);
 		
 		for(int i = 0 ; i < dateArray.length ; i++) {
 			temp += dateArray[i];
@@ -75,58 +95,6 @@ public class ProductController {
 		productService.addProduct(product);
 		
 		request.setAttribute("product", product);
-		
-		/* Image Upload Area */
-		
-		if(FileUpload.isMultipartContent(request)) {
-			String tempDir = "C:\\workspace\\09.Model2MVCShop(jQuery)\\WebContent\\images\\uploadFiles\\";
-			
-			DiskFileUpload fileUpload = new DiskFileUpload();
-			fileUpload.setRepositoryPath(tempDir);
-			
-			fileUpload.setSizeMax(2048*2048*10);
-			// 1024*1024*10 = 100MB 까지 업로드가능
-			fileUpload.setSizeThreshold(1024*100);
-			
-			if(request.getContentLength() < fileUpload.getSizeMax()) {
-				product = new Product();
-				
-				StringTokenizer token = null;
-				
-				List fileItemList = fileUpload.parseRequest(request);
-				
-				for(int i=0; i< fileItemList.size(); i++) {
-					
-					FileItem fileItem = (FileItem)fileItemList.get(i);
-					
-					if(fileItem.isFormField()) {
-						if(fileItem.getFieldName().equals("manuDate")) {
-							token = new StringTokenizer(fileItem.getString("euc-kr"),"-");
-							System.out.println(" :: FileUpload token.nextToken :: " + token.nextToken());
-							String manuDate = token.nextToken()+token.nextToken()+token.nextToken();
-							product.setManuDate(manuDate);
-						}
-						else if (fileItem.getFieldName().equals("prodName")) 
-							product.setProdName(fileItem.getString("euc-kr"));
-
-						else if (fileItem.getFieldName().equals("prodName")) 
-							product.setProdDetail(fileItem.getString("euc-kr"));
-						
-						else if (fileItem.getFieldName().equals("price")) 
-							product.setPrice(Integer.parseInt(fileItem.getString("euc-kr")));		
-					
-					} else {
-						
-						if(fileItem.getSize() > 0) {
-							
-							//int idx = fileItem.getName
-						}
-						
-					}
-				}
-			}
-			
-		}
 		
 		return "forward:/product/addProduct.jsp";
 	}
@@ -188,12 +156,31 @@ public class ProductController {
 		}
 		search.setPageSize(pageSize);
 		
+
+		Map<String, Object> searchMap = new HashMap<String, Object>();
+		searchMap.put("search",search);
+		
+		if(request.getParameter("order") == null) {
+			System.out.println(" 1 "+request.getParameter("order"));
+			searchMap.put("order", "p.prod_no");
+		} else if(request.getParameter("order").equals("1")) {
+			System.out.println(" 2 "+request.getParameter("order"));
+			searchMap.remove("order");
+			searchMap.put("order", "p.PRICE DESC");
+		} else if(request.getParameter("order").equals("2")){
+			System.out.println(" 3 "+request.getParameter("order"));
+			searchMap.remove("order");
+			searchMap.put("order", "p.PRICE ASC");
+		}	
+		
+		System.out.println(" 4 " + searchMap.get("order"));
+		
 		System.out.println(" getParameter : " + request.getParameter("menu"));
 		
 		System.out.println(search + " :: ");
 		// Business logic 수행
 		System.out.println(search.getStartRowNum()+" "+search.getEndRowNum());
-		Map<String , Object> map=productService.getProductList(search);
+		Map<String , Object> map=productService.getProductList(searchMap);
 		
 		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
 		System.out.println(resultPage);

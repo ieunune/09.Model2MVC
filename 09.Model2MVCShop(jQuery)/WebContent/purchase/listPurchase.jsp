@@ -31,6 +31,14 @@
 		$(".ct_list_pop td:nth-child(3)").css("color","blue");
 		
 		$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
+		
+		$(".ct_list_pop td:nth-child(11)").on("click",function(){
+			//alert($(this).children("#tranNo").val())
+			//alert($(this).children("#userId").val())
+			$(window.parent.frames["rightFrame"].document.location).attr("href","/purchase/updateTranCodeByTranNo?tranNo="+$(this).children("#tranNo").val()+"&userId="+$(this).children("#userId").val());
+			alert('수령완료처리 되었습니다.')
+		});
+		
 	});
 </script>
 </head>
@@ -39,7 +47,7 @@
 
 	<div style="width: 98%; margin-left: 10px;">
 
-		<form name="detailForm" action="/purchase/listPurchase" method="post">
+		<form name="detailForm">
 
 			<table width="100%" height="37" border="0" cellpadding="0"
 				cellspacing="0">
@@ -109,12 +117,14 @@
 					${purchase.divyAddr}</td>
 					<td></td>
 					<td align="left">
+						<input type="hidden" id="tranNo" value="${purchase.tranNo}">
+						<input type="hidden" id="userId" value="${user.userId}">
 						<c:if test="${purchase.tranCode=='000'}">
 							구매완료	
 						</c:if>
 						<c:if test="${purchase.tranCode=='001'}">
 							배송중
-							<a href="/purchase/updateTranCodeByTranNo?tranNo=${purchase.tranNo}&userId=${user.userId}" onclick="alert('수령완료처리 되었습니다.')">수령하기</a>	
+							<a id="state">수령하기</a>
 						</c:if>
 						<c:if test="${purchase.tranCode=='002'}">
 							배송완료	
