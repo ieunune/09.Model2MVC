@@ -159,6 +159,11 @@
 							////////////////////////////////////////////////////////////////////////////////////////////////// -->
                          		<img src="/images/btn_login.gif" width="56" height="20" border="0"/>
                          </td>
+                         <td width="70">
+                            	<a href="findUserView.jsp;">
+                            		<img src="/images/btn_find.gif" width="70" height="20" border="0">
+                            	</a>
+                            </td>
                          <td width="10">&nbsp;</td>
                          <td width="70">
                          	<!-- ////////////////// jQuery Event 처리로 변경됨 /////////////////////////

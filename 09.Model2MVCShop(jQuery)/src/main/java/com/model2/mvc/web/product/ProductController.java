@@ -2,9 +2,7 @@ package com.model2.mvc.web.product;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -12,9 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.fileupload.DiskFileUpload;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUpload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
+import com.model2.mvc.service.comment.CommentService;
+import com.model2.mvc.service.comment.impl.CommentServiceImpl;
+import com.model2.mvc.service.domain.Comment;
 import com.model2.mvc.service.domain.Product;
 import com.model2.mvc.service.product.ProductService;
 
@@ -39,6 +37,9 @@ public class ProductController {
 	@Autowired
 	@Qualifier("productServiceImpl")
 	private ProductService productService;
+	@Autowired
+	@Qualifier("commentServiceImpl")
+	private CommentService commentService;
 	
 	public ProductController() {
 		System.out.println("ProductController Defualt Constructor");
@@ -63,7 +64,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping("/addProduct")
-	public String addProduct( @ModelAttribute("product") Product product, HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file, @RequestParam("prodNo") int prodNo) throws Exception {
+	public String addProduct( @ModelAttribute("product") Product product, HttpServletRequest request, HttpServletResponse response, @RequestParam("file") MultipartFile file) throws Exception {
 
 		System.out.println("/addProduct");
 		//Business Logic
@@ -76,13 +77,6 @@ public class ProductController {
 		
 		File target = new File(uploadPath, file.getOriginalFilename());
 		FileCopyUtils.copy(file.getBytes(), target);
-		
-		String history=null;
-		Cookie cookie = new Cookie("history", String.valueOf(prodNo));
-		cookie.setMaxAge(60*60*24);
-		System.out.println("cookie : " + cookie);
-		history += cookie+",";
-		response.addCookie(cookie);
 		
 		for(int i = 0 ; i < dateArray.length ; i++) {
 			temp += dateArray[i];
@@ -100,7 +94,7 @@ public class ProductController {
 	}
 	
 	@RequestMapping("/getProduct")
-	public String getProduct( @RequestParam("menu") String menu, @RequestParam("prodNo") int prodNo , Model model, HttpSession session, HttpServletResponse response) throws Exception {
+	public String getProduct( @RequestParam("menu") String menu, @RequestParam("prodNo") int prodNo , Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		System.out.println(" @@@@@@ "+menu);
 		
@@ -114,9 +108,12 @@ public class ProductController {
 		System.out.println("/getProduct");
 		//Business Logic
 		Product product = productService.getProduct(prodNo);
-		// Model 과 View 연결
-		session.setAttribute("product", product);
 		
+		Map<String, Object> map = commentService.getCommentList(prodNo);
+		
+		// Model 과 View 연결
+		request.setAttribute("product", product);
+		request.setAttribute("list", map.get("list"));
 		if(menu.equals("manage")) {
 			return "forward:/product/updateProduct.jsp";
 		}

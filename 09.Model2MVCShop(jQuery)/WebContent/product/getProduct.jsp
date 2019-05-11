@@ -125,16 +125,69 @@ $(function () {
 				<td height="1" colspan="3" bgcolor="D6D6D6"></td>
 			</tr>
 		</table>
+	
+		<br>
+		<table width="100%" height="37" border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td width="15" height="37"><img src="/images/ct_ttl_img01.gif"
+					width="15" height="37"></td>
+				<td background="/images/ct_ttl_img02.gif" width="100%"
+					style="padding-left: 10px;">
+					<table width="100%" border="0" cellspacing="0" cellpadding="0">
+						<tr>
+							<td width="93%" class="ct_ttl01">한줄평</td>
+							<td width="20%" align="right">&nbsp;</td>
+						</tr>
+					</table>
+				</td>
+				<td width="12" height="37"><img src="/images/ct_ttl_img03.gif"
+					width="12" height="37" /></td>
+			</tr>
+		</table>
+		
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+				style="margin-top: 10px;">
+				<tr>
+					<td class="ct_list_b" width="70%">내용</td>
+					<td class="ct_line02"></td>
+					<td class="ct_list_b" width="30%">등록일자</td>
+					<td class="ct_line02"></td>
+				</tr>
+				<tr>
+					<td colspan="11" bgcolor="808285" height="1"></td>
+				</tr>
+				<c:set var="i" value="0"/>
+				<c:forEach var="comment" items="${list}"> 
+					<c:set var="i" value="${i+1}"/>
+				<tr class="ct_list_pop">
+					<td align="center">
+					${comment.reply}</td>
+					<td></td>
+					<td align="center">
+					${comment.inputDate}</td>
+					<td></td>
+				</tr>
+				</c:forEach>
+		</table>
 
+		<hr>
+									
+		<input type="text" name="reply" id="reply" class="ct_input_g" style="width: 100%; height: 30px">	
+								
 		<table width="100%" border="0" cellspacing="0" cellpadding="0"
 			style="margin-top: 10px;">
 			<tr>
+							<td width="17" height="23"><img src="/images/ct_btnbg01.gif"
+								width="17" height="23" /></td>
+							<td background="/images/ct_btnbg02.gif" class="ct_btn01"
+								style="padding-top: 3px;"><a
+								href="/comment/addComment?prod_No=${product.prodNo}">댓글달기</a></td>
 				<td width="53%"></td>
 				<td align="right">
 
 					<table border="0" cellspacing="0" cellpadding="0">
 						<tr>	
-						
+							
 							<td width="17" height="23"><img src="/images/ct_btnbg01.gif"
 								width="17" height="23" /></td>
 							<td background="/images/ct_btnbg02.gif" class="ct_btn01"

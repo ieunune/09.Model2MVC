@@ -177,7 +177,7 @@ public class UserController {
 		//Business Logic
 		boolean result=userService.checkDuplication(userId);
 		// Model °ú View ¿¬°á
-		model.addAttribute("result", new Boolean(result));
+		model.addAttribute("result", result);
 		model.addAttribute("userId", userId);
 
 		return "forward:/user/checkDuplication.jsp";
@@ -185,7 +185,7 @@ public class UserController {
 
 	
 	@RequestMapping( value="listUser" )
-	public String listUser( @ModelAttribute("search") Search search , Model model , HttpServletRequest request) throws Exception{
+	public String listUser( @ModelAttribute("search") Search search , Model model) throws Exception{
 		
 		System.out.println("/user/listUser : GET / POST");
 		
