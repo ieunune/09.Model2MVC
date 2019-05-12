@@ -10,12 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.util.URLEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -94,15 +96,18 @@ public class ProductController {
 	}
 	
 	@RequestMapping("/getProduct")
-	public String getProduct( @RequestParam("menu") String menu, @RequestParam("prodNo") int prodNo , Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String getProduct( @RequestParam("menu") String menu, @RequestParam("prodNo") int prodNo , Model model, HttpServletRequest request, @CookieValue(value="history", defaultValue="false") Cookie cookie, HttpServletResponse response, HttpSession session) throws Exception {
+			
+		String history="";
+		cookie = new Cookie("history",String.valueOf(prodNo));
+		System.out.println("cookie : " + cookie.getValue());
+		history += cookie.getValue()+",";
+		System.out.println("history : " + history);
+		cookie = new Cookie("history", java.net.URLEncoder.encode(history, "utf-8"));
 		
-		System.out.println(" @@@@@@ "+menu);
-		
-		String temp=null;
-		Cookie cookie = new Cookie("history", String.valueOf(prodNo));
 		cookie.setMaxAge(60*60*24);
-		System.out.println("cookie : " + cookie);
-		temp += cookie+",";
+		cookie.setPath("/");
+		
 		response.addCookie(cookie);
 		
 		System.out.println("/getProduct");
@@ -112,7 +117,7 @@ public class ProductController {
 		Map<String, Object> map = commentService.getCommentList(prodNo);
 		
 		// Model °ú View ¿¬°á
-		request.setAttribute("product", product);
+		session.setAttribute("product", product);
 		request.setAttribute("list", map.get("list"));
 		if(menu.equals("manage")) {
 			return "forward:/product/updateProduct.jsp";
