@@ -96,9 +96,9 @@ public class ProductController {
 	}
 	
 	@RequestMapping("/getProduct")
-	public String getProduct( @RequestParam("menu") String menu, @RequestParam("prodNo") int prodNo , Model model, HttpServletRequest request, @CookieValue(value="history", defaultValue="false") Cookie cookie, HttpServletResponse response, HttpSession session) throws Exception {
+	public String getProduct( @RequestParam("menu") String menu, @RequestParam("prodNo") int prodNo , Model model, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
 			
-		String history="";
+		/*String history="";
 		cookie = new Cookie("history",String.valueOf(prodNo));
 		System.out.println("cookie : " + cookie.getValue());
 		history += cookie.getValue()+",";
@@ -108,7 +108,7 @@ public class ProductController {
 		cookie.setMaxAge(60*60*24);
 		cookie.setPath("/");
 		
-		response.addCookie(cookie);
+		response.addCookie(cookie);*/
 		
 		System.out.println("/getProduct");
 		//Business Logic
@@ -149,34 +149,34 @@ public class ProductController {
 	}
 	
 	@RequestMapping("/listProduct")
-	public String listProduct( @ModelAttribute("search") Search search , Model model , HttpServletRequest request) throws Exception{
+	public String listProduct( @ModelAttribute("search") Search search, Model model , HttpServletRequest request) throws Exception{
 		
 		System.out.println("/listProduct");
 		
 		if(search.getCurrentPage() == 0 ){
 			search.setCurrentPage(1);
 		}
-		search.setPageSize(pageSize);
 		
-
+		if(request.getParameter("pageSize") == null) {
+			search.setPageSize(pageSize);
+		} else {
+			String repageSize = (String)request.getParameter("pageSize");
+			search.setPageSize(Integer.parseInt(repageSize));
+		}
+		
 		Map<String, Object> searchMap = new HashMap<String, Object>();
 		searchMap.put("search",search);
 		
 		if(request.getParameter("order") == null) {
-			System.out.println(" 1 "+request.getParameter("order"));
 			searchMap.put("order", "p.prod_no");
 		} else if(request.getParameter("order").equals("1")) {
-			System.out.println(" 2 "+request.getParameter("order"));
 			searchMap.remove("order");
 			searchMap.put("order", "p.PRICE DESC");
 		} else if(request.getParameter("order").equals("2")){
-			System.out.println(" 3 "+request.getParameter("order"));
 			searchMap.remove("order");
 			searchMap.put("order", "p.PRICE ASC");
 		}	
-		
-		System.out.println(" 4 " + searchMap.get("order"));
-		
+			
 		System.out.println(" getParameter : " + request.getParameter("menu"));
 		
 		System.out.println(search + " :: ");
@@ -184,12 +184,10 @@ public class ProductController {
 		System.out.println(search.getStartRowNum()+" "+search.getEndRowNum());
 		Map<String , Object> map=productService.getProductList(searchMap);
 		
-		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, pageSize);
+		Page resultPage = new Page( search.getCurrentPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit, search.getPageSize());
 		System.out.println(resultPage);
 		
-		System.out.println(resultPage + " :: ");
-		// Model 과 View 연결
-		
+		// Model 과 View 연결	
 		model.addAttribute("list", map.get("list"));
 		model.addAttribute("resultPage", resultPage);
 		model.addAttribute("search", search);

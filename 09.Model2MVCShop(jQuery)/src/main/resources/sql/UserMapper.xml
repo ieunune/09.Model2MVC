@@ -27,6 +27,12 @@
 							#{phone:VARCHAR} , #{addr:VARCHAR} , #{email:VARCHAR} , SYSDATE )
 	 </insert>
 	 
+	 <select id="findUser" parameterType="user" resultMap="userSelectMap">
+		SELECT user_id , user_name , password , role ,  cell_phone ,  addr , email , reg_date
+		FROM users
+		WHERE user_id = #{userId} and user_name = #{userName}
+	 </select>
+	 
 	 <!-- SQL : SELECT ONE -->
 	 <select 	id="getUser"	parameterType="string"	resultMap="userSelectMap">
 		SELECT

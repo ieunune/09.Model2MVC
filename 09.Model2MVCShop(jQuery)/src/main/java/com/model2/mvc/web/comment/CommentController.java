@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -28,17 +27,42 @@ public class CommentController {
 	}
 	
 	@RequestMapping("/addComment")
-	public String addProductView(@ModelAttribute("comment") Comment comment, @RequestParam("prod_No") int prodNo, HttpServletRequest request) throws Exception { 
+	public String addProductView(@ModelAttribute("comment") Comment comment, @RequestParam("prod_no") int prodNo, HttpServletRequest request) throws Exception { 
 		
 		System.out.println("comment :: " + comment);
-
 		comment.setProdNo(prodNo);
 		System.out.println(request.getParameter("reply"));
-		//comment.setReply(request.getParameter("reply"));
+		comment.setReply(request.getParameter("reply"));
+		//	comment.setReply(request.getParameter("reply"));
 		
 		System.out.println("comment :: " + comment);
 		
 		commentService.addComment(comment);
+		return "redirect:/comment/listComment?prod_No="+prodNo;
+	}
+	
+	@RequestMapping("/updateComment")
+	public String updateComment(@ModelAttribute("comment") Comment comment, @RequestParam("prod_no") int prodNo, HttpServletRequest request) throws Exception { 
+		
+		/*
+		 * 
+		 * 		UPDATE COMMENT 추가
+		 * 
+		 * 
+		 */
+		
+		return "redirect:/comment/listComment?prod_No="+prodNo;
+	}
+	
+	@RequestMapping("/deleteComment")
+	public String deleteComment(@ModelAttribute("comment") Comment comment, @RequestParam("prod_no") int prodNo, HttpServletRequest request) throws Exception { 
+		
+		/*
+		 * 
+		 * 		DELETE COMMENT 추가
+		 * 
+		 * 
+		 */
 		
 		return "redirect:/comment/listComment?prod_No="+prodNo;
 	}

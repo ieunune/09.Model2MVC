@@ -15,7 +15,7 @@
 		<result property="price" 		column="price" 				jdbcType="NUMERIC" />
 		<result property="fileName" 	column="image_file" 		jdbcType="VARCHAR" />
 		<result property="regDate" 		column="reg_date" 			jdbcType="DATE" />
-		<result property="proTranCode" 	column="TRAN_STATUS_CODE" 	jdbcType="DATE" />
+		<result property="proTranCode" 	column="TRAN_STATUS_CODE" 	jdbcType="VARCHAR" />
 	</resultMap>
 	
 	<!-- SQL : INSERT -->
@@ -27,9 +27,10 @@
 	 </insert>
 	
 	<select id="getProduct" parameterType="int" resultMap="productSelectMap">
-		SELECT prod_No , prod_name , prod_detail , manufacture_day , price, image_file, reg_date
-		FROM product
-		WHERE prod_No = #{value}
+		SELECT p.prod_No , p.prod_name , p.prod_detail , p.manufacture_day , p.price, p.image_file, p.reg_date, t.tran_Status_Code 
+		FROM product p, transaction t
+		WHERE p.prod_no = t.prod_no(+)
+		AND p.prod_No = #{value}
 	</select>
 	
 	<update id="updateProduct" parameterType="product">

@@ -62,6 +62,20 @@ public class UserController {
 		return "redirect:/user/loginView.jsp";
 	}
 	
+	@RequestMapping( value="findUser", method=RequestMethod.POST )
+	public String findUser( @ModelAttribute("user") User user, Model model ) throws Exception {
+
+		System.out.println("/user/addUser : POST");
+		
+		//Business Logic
+		user = userService.findUser(user);
+		
+		// Model과 View 연결
+		model.addAttribute("user", user);
+		
+		return "forward:/user/findUser.jsp";
+	}
+	
 
 	@RequestMapping( value="getUser", method=RequestMethod.GET )
 	public String getUser( @RequestParam("userId") String userId , Model model ) throws Exception {
@@ -70,6 +84,8 @@ public class UserController {
 		//Business Logic
 		User user = userService.getUser(userId);
 		// Model 과 View 연결
+		
+		
 		model.addAttribute("user", user);
 		
 		return "forward:/user/getUser.jsp";

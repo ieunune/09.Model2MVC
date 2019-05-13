@@ -25,8 +25,8 @@
 	</bean>
 	
 	<bean id="uploadPath" class="java.lang.String">
-		<!--<constructor-arg value="C:\Users\USER\git\09.Model2MVC\09.Model2MVCShop(jQuery)\WebContent\images\uploadFiles"></constructor-arg>-->
-        <constructor-arg value="C:\Users\N\git\09.Model2MVC\09.Model2MVCShop(jQuery)\WebContent\images\uploadFiles"></constructor-arg>    
+		<constructor-arg value="C:\Users\USER\git\09.Model2MVC\09.Model2MVCShop(jQuery)\WebContent\images\uploadFiles"></constructor-arg>
+<!--         <constructor-arg value="C:\Users\N\git\09.Model2MVC\09.Model2MVCShop(jQuery)\WebContent\images\uploadFiles"></constructor-arg>     -->
 	</bean>
 	<!-- Spring 3.X  지원하는 SpEL를 사용은 아래와 같이 properties 화일을 등록. 
 			UserController 에서 Spring EL 의 사용법을 이해 할 것-->

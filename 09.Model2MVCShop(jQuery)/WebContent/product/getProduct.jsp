@@ -17,6 +17,9 @@ $(function () {
 	$("td.ct_btn01:contains('이전')").on("click", function(){
 		history.go(-1);
 	});
+	$("#commentGo").on("click",function(){
+		$("form").attr("action","/comment/addComment?prod_no="+${product.prodNo}).attr("method","POST").submit();
+	});
 });
 </script>
 </head>
@@ -170,24 +173,23 @@ $(function () {
 				</c:forEach>
 		</table>
 
-		<hr>
+		<hr/>
 									
-		<input type="text" name="reply" id="reply" class="ct_input_g" style="width: 100%; height: 30px">	
+		<input type="text" name="reply" id="reply" class="ct_input_g" style="width: 100%; height: 30px"/>
 								
-		<table width="100%" border="0" cellspacing="0" cellpadding="0"
-			style="margin-top: 10px;">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top: 10px;">
 			<tr>
-							<td width="17" height="23"><img src="/images/ct_btnbg01.gif"
-								width="17" height="23" /></td>
-							<td background="/images/ct_btnbg02.gif" class="ct_btn01"
-								style="padding-top: 3px;"><a
-								href="/comment/addComment?prod_No=${product.prodNo}">댓글달기</a></td>
+				<td width="17" height="23"><img src="/images/ct_btnbg01.gif" width="17" height="23" /></td>
+				<td background="/images/ct_btnbg02.gif" class="ct_btn01" style="padding-top: 3px;">
+<%-- 					<a href="/comment/addComment?prod_No=${product.prodNo}">댓글달기</a> --%>
+					<a href="#" id="commentGo">댓글달기</a>
+				</td>
 				<td width="53%"></td>
 				<td align="right">
 
 					<table border="0" cellspacing="0" cellpadding="0">
-						<tr>	
-							
+						<tr>
+							<c:if test="${product.proTranCode==null}">						
 							<td width="17" height="23"><img src="/images/ct_btnbg01.gif"
 								width="17" height="23" /></td>
 							<td background="/images/ct_btnbg02.gif" class="ct_btn01"
@@ -196,7 +198,7 @@ $(function () {
 							<td width="14" height="23"><img src="/images/ct_btnbg03.gif"
 								width="14" height="23"></td>
 							<td width="30"></td>
-							
+							</c:if>
 							<td width="17" height="23"><img src="/images/ct_btnbg01.gif"
 								width="17" height="23" /></td>
 							<td background="/images/ct_btnbg02.gif" class="ct_btn01"
@@ -204,7 +206,6 @@ $(function () {
 								이전</td>
 							<td width="14" height="23"><img src="/images/ct_btnbg03.gif"
 								width="14" height="23"></td>
-
 						</tr>
 					</table>
 

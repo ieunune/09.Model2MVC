@@ -39,6 +39,9 @@ function fncFindUser() {
 					<td width="93%" class="ct_ttl01">비밀번호찾기</td>
 					<td width="20%" align="right">&nbsp;</td>
 				</tr>
+				<tr>
+					<td style="color:red;"><b>영문이름으로 가입시 대소문자를 구별하니 주의해주시길 바랍니다.</b></td>
+				</tr>
 			</table>
 		</td>
 		<td width="12" height="37">

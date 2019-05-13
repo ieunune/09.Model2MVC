@@ -14,7 +14,11 @@
 
 	function fncGetUserList(currentPage) {
 		$("#currentPage").val(currentPage)
-		$("form").attr("method" , "POST").attr("action" , "/product/listProduct?&menu="+$("#menu").val()).submit();
+		$("form").attr("method" , "POST").attr("action" , "/product/listProduct?&menu="+$("#menu").val()+"&pageSize="+$("#selectPageSize").val()).submit();
+	}
+	
+	function getPageSize(){
+		$(window.parent.frames["rightFrame"].document.location).attr("href","/product/listProduct?menu="+$("#menu").val()+"&pageSize="+$("#selectPageSize").val());
 	}
 	
 	$(function(){		
@@ -42,12 +46,14 @@
 			//alert($('#prodNo').index(this));
 			//alert($('#prod_No').index(this));
 			//alert($('.ct_list_pop td:nth-child(3)').index(this));
-			
 			self.location="/product/getProduct?prodNo="+$(this).children("input").val()+"&menu="+$("#menu").val();
+// 			if(${product.proTranCode=='null'}){
+// 				self.location="/product/getProduct?prodNo="+$(this).children("input").val()+"&menu="+$("#menu").val();
+// 			}
 		});
 		
-		$( ".ct_list_pop td:nth-child(3)" ).css("color" , "red");
-		$("h7").css("color" , "red");
+		$( ".ct_list_pop td:nth-child(3)" ).css("color" , "red").css("font-weight","bolder");
+		$("h7").css("color" , "red").css("font-weight","bolder");
 		$(".ct_list_pop:nth-child(4n+6)" ).css("background-color" , "whitesmoke");
 	});
 </script>
@@ -82,36 +88,40 @@
 				</tr>
 			</table>
 
-
 			<table width="100%" border="0" cellspacing="0" cellpadding="0"
 				style="margin-top: 10px;">
 				<tr>
 					<td class="ct_list_b" width="100">표시개수</td>
 					<td class="ct_line02"></td>
 					<td class="ct_list_b" width="100">
-					<select name="pageSize" id="selectPageSize"class="ct_input_g" style="width: 80px">
+					<select name="pageSize" id="selectPageSize"class="ct_input_g" style="width: 80px" onchange="javascript:getPageSize()">
 							<%-- ${ ! empty search.pageSize == 0 ? "selected" : "" }--%>
-							<option value="0" onchange="alert('5')">5</option>
-							<option value="1" onchange="alert('10')">10</option>
-							<option value="2" onchange="alert('15')">15</option>
+							<option value="5" ${ search.pageSize == 5 ? "selected" : "" }>5</option>
+							<option value="8" ${ search.pageSize == 8 ? "selected" : "" }>8</option>
+							<option value="10" ${ search.pageSize == 10 ? "selected" : "" } >10</option>
+							<option value="15" ${ search.pageSize == 15 ? "selected" : "" } >15</option>
 					</select>
 					</td>
 					<td class="ct_line02"></td>
 					<td class="ct_list_b" width="100">
-						▲<a href="/product/listProduct?menu=${param.menu}&order=1">높은가격순</a><br>
-						▼<a href="/product/listProduct?menu=${param.menu}&order=2">낮은가격순 </a></td>
+						▲<a href="/product/listProduct?menu=${param.menu}&order=1&pageSize=${search.pageSize}">높은가격순</a><br>
+						▼<a href="/product/listProduct?menu=${param.menu}&order=2&pageSize=${search.pageSize}">낮은가격순 </a></td>
 					<td class="ct_line02"></td>
 					<c:if test="${ search.searchCondition != null}">
-					<td align="right">
+					<td class="ct_list_b" width="100" align="right">
 						<select name="searchCondition" class="ct_input_g" style="width: 80px">
 							<option value="0" ${ ! empty search.searchCondition && search.searchCondition==0 ? "selected" : "" }>상품번호</option>
 							<option value="1" ${ ! empty search.searchCondition && search.searchCondition==1 ? "selected" : "" }>상품명</option>
 							<option value="2" ${ ! empty search.searchCondition && search.searchCondition==2 ? "selected" : "" }>상품가격</option>
-					</select> <input type="text" 
+						</select> 
+					<td class="ct_line02"></td>
+					<td class="ct_list_b" width="100" align="right">
+						<input type="text" 
 									 name="searchKeyword" 
 									 value="${! empty search.searchKeyword ? search.searchKeyword : ''}" 
 									 class="ct_input_g"
-									 style="width: 200px; height: 19px" /></td>
+									 style="width: 200px; height: 19px" />
+					<td class="ct_line02"></td>						
 					</c:if>
 					<c:if test="${ search.searchCondition == null }">
 					<td align="right"><select name="searchCondition"
@@ -187,6 +197,7 @@
 					<td></td>
 					<td align="left" >
 						<input type="hidden" id="prodNo" value="${product.prodNo}">
+						<input type="hidden" id="tranCode" value="${product.proTranCode}">
 						<c:if test="${product.proTranCode==null}">
 						판매중
 						</c:if>
@@ -230,12 +241,14 @@
 						◆<a href="/product/listProduct?menu=${param.menu}">품절상품만 보기</a>
 						◆<a href="/product/listProduct?menu=${param.menu}">품절상품포함 보기</a>
 						◆<a href="/product/listProduct?menu=${param.menu}">품정상품제외 보기</a>
+						◆<a href="/product/listProduct?menu=${param.menu}">신상품 보기</a>
 						<br>
 						◆<a href="/product/listProduct?menu=${param.menu}">찜한 보기</a>
 						◆<a href="/product/listProduct?menu=${param.menu}">별점 매기기</a>
 						◆<a href="/product/listProduct?menu=${param.menu}">랭킹 보기</a>
 						◆<a href="/product/listProduct?menu=${param.menu}">할인 이벤트</a>
 						<br>
+
 					</td>
 				</tr>
 			</table>

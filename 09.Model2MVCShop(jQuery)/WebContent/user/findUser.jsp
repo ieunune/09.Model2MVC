@@ -25,8 +25,11 @@
 		<td background="/images/ct_ttl_img02.gif" width="100%" style="padding-left:10px;">
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
-					<td width="93%" class="ct_ttl01">비밀번호찾기</td>
+					<td width="93%" class="ct_ttl01">찾으신 비밀번호 정보</td>
 					<td width="20%" align="right">&nbsp;</td>
+				</tr>
+				<tr>
+					<td style="color:red;"><b> 비밀번호 분실에 주의해주시길 바랍니다.</b></td>
 				</tr>
 			</table>
 		</td>
@@ -35,8 +38,6 @@
 		</td>
 	</tr>
 </table>
-
-<h5><b> 비밀번호 좀 외워라 만들기 귀찮다.</b></h5>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:13px;">
 	<tr>
